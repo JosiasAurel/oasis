@@ -32,7 +32,7 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState("")
   const [visibleTools, setVisibleTools] = useState(allTools)
   const [list, setList] = useState(sampleProjects);
-  const [isLoading, setIsLoading] = useState(false); // set loading to true in production
+  const [isLoading, setIsLoading] = useState(true); // set loading to true in production
   const [hasMoreRepos, setHasMoreRepos] = useState(true);
 
   const countCategories = countBy(list)
@@ -67,9 +67,7 @@ const Home = () => {
     }
   }
 
-  //enable live project fetching in prod
 
-{/*
 useEffect(() => {
     const getRepos = async () => {
       try {
@@ -136,7 +134,7 @@ useEffect(() => {
       console.error(err);
     }
   };
-*/}
+
 
   return (
     <div>
