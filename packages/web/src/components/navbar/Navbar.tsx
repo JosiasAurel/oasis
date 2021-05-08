@@ -1,4 +1,4 @@
-import { GitHubLogin, Logout } from '@lib/auth';
+import { GitHubLogin, Logout } from 'src/modules/auth';
 import {
   Bell,
   DownArrow,
@@ -14,7 +14,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '../common/Button';
 import { NavItem } from './NavItem';
 import { DropdownItem } from '../common/DropdownItem';
-import { useGetCurrentUser } from '@lib/getCurrentUser';
+import { useGetCurrentUser } from 'src/modules/user/getCurrentUser';
 
 export const Navbar: React.FC = () => {
   const [isDropdownActive, setDropdownActive] = useState(false);
@@ -55,8 +55,12 @@ export const Navbar: React.FC = () => {
           <div className="hidden md:flex space-x-3">
             <NavItem name="Home" href="#" icon={Home} />
             <NavItem name="Topics" href="#" icon={Topics} />
-            <NavItem name="Friends" href="#" icon={Friends} />
-            <NavItem name="Saved" href="#" icon={Saved} />
+            {user && (
+              <>
+                <NavItem name="Friends" href="#" icon={Friends} />
+                <NavItem name="Saved" href="#" icon={Saved} />
+              </>
+            )}
           </div>
         </div>
         <div className="flex justify-items-start items-center space-x-8 ml-4">
