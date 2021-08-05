@@ -1,4 +1,4 @@
-import { MouseEventHandler } from 'react';
+import React, { MouseEventHandler } from 'react';
 
 interface NavItemProps {
   name: string;
@@ -10,7 +10,7 @@ interface NavItemProps {
 export const TabItem: React.FC<NavItemProps> = (props: NavItemProps) => {
   return (
     <div
-      className={`px-5 rounded-lg py-2 font-bold text-lg flex ${
+      className={`cursor-pointer px-5 rounded-lg py-2 font-bold text-lg flex ${
         props.active && 'bg-gray-700'
       }`}
       onClick={props.onClick}

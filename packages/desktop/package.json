@@ -1,0 +1,23 @@
+{
+  "name": "@oasis-sh/desktop",
+  "version": "1.0.0",
+  "description": "Oasis Desktop App",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "start": "electron ./dist/index.js",
+    "build:mac": "yarn build && electron-builder --mac",
+    "build:win": "yarn build && electron-builder --win",
+    "build:linux": "yarn build && electron-builder --linux"
+  },
+  "devDependencies": {
+    "electron": "^13.1.4",
+    "pinst": "^2.1.6",
+    "typescript": "4.3.5"
+  },
+  "dependencies": {
+    "electron-log": "^4.3.5",
+    "electron-updater": "^4.4.0"
+  }
+}

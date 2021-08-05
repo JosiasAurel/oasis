@@ -1,0 +1,40 @@
+query Search($searchQuery: String! $limit: Float!) {
+  search(searchQuery: $searchQuery limit: $limit) {
+    __typename
+    ... on User {
+      id
+      userBanner: banner
+      avatar
+      createdAt
+      github
+      twitter
+      discord
+      google
+      bio
+      username
+      verified
+      roles
+      displayName: name
+    }
+    ... on Post {
+      id
+      message
+      author {
+        username
+        avatar
+        name
+      }
+      comments(limit: 0 offset: 0) {
+        total
+      }
+      createdAt
+      upvotes
+      downvotes
+    }
+    ... on Resort {
+      name
+      description
+      banner
+    }
+  }
+}

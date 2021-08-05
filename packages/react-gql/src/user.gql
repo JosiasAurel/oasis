@@ -1,0 +1,127 @@
+fragment UserFields on User {
+  id
+  banner
+  avatar
+  createdAt
+  github
+  twitter
+  discord
+  google
+  bio
+  username
+  name
+  verified
+}
+
+query getCurrentUser {
+  currentUser {
+    ...UserFields
+    roles
+  }
+}
+
+query getUserByName($username: String!) {
+  getUserByName(username: $username) {
+    ...UserFields
+    badges {
+      name
+      id
+      imagePath
+      level
+      description
+    }
+    followers(offset: 0, limit: 0) {
+      total
+    }
+    following(offset: 0, limit: 0) {
+      total
+    }
+    posts(offset: 0, limit: 0) {
+      total
+    }
+  }
+}
+
+query getMyUserId {
+  currentUser {
+    id
+  }
+}
+
+mutation updateProfile($data: UpdateProfileInput!) {
+  updateProfile(data: $data)
+}
+
+mutation deleteAccount {
+  deleteAccount
+}
+
+mutation FollowUser($userId: String!) {
+  followUser(userId: $userId)
+}
+
+query getUsersPosts(
+  $username: String!
+  $postsLimit: Float!
+  $postsOffset: Float!
+) {
+  userOnlyPosts: getUserByName(username: $username) {
+    posts(offset: $postsOffset, limit: $postsLimit) {
+      items {
+        id
+        message
+        createdAt
+        lastEdited
+        topics
+        author {
+          id
+          avatar
+          username
+          name
+        }
+        isUpvoted
+        isDownvoted
+        upvotes
+        downvotes
+        comments(limit: 0, offset: 0) {
+          total
+        }
+      }
+      hasMore
+      total
+    }
+  }
+}
+
+query getUsersUpvotedPosts(
+  $username: String!
+  $postsLimit: Float!
+  $postsOffset: Float!
+) {
+  getUserByName(username: $username) {
+    upvotedPosts(offset: $postsOffset, limit: $postsLimit) {
+      items {
+        id
+        message
+        createdAt
+        lastEdited
+        topics
+        author {
+          id
+          avatar
+          username
+          name
+        }
+        isUpvoted
+        isDownvoted
+        upvotes
+        downvotes
+        comments(limit: 0, offset: 0) {
+          total
+        }
+      }
+      hasMore
+      total
+    }
+  }
+}

@@ -1,0 +1,64 @@
+## Web
+# Set to 'local' if running API locally, otherwise set to 'remote'
+API_MODE='local'
+
+# Enable Bundle Analyzer (Optional)
+ANALYZE=true yarn build
+
+## API
+# Session Secret Token
+SESSION_SECRET=can-be-anything-even-this
+
+# Trust Proxy ('true' ONLY if you are reverse-proxying the API)
+TRUST_PROXY=false
+
+# https://redis.io/download
+REDIS_URL=redis://redis:6379
+
+# Github Authentication (Optional)
+# https://github.com/settings/developers
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+GITHUB_CALLBACK_URL=http://localhost:3000/api/auth/github/callback
+
+# Twitter Authentication (Optional)
+# https://apps.twitter.com
+TWITTER_KEY=
+TWITTER_SECRET_KEY=
+TWITTER_CALLBACK_URL=http://localhost:3000/api/auth/twitter/callback
+
+# Discord Authentication (Optional)
+# https://discord.com/developers/applications
+DISCORD_CLIENT_ID=
+DISCORD_CLIENT_SECRET=
+DISCORD_CALLBACK_URL=http://localhost:3000/api/auth/discord/callback
+
+# Google Authentication (Optional)
+# https://console.developers.google.com
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_CALLBACK_URL=http://localhost:3000/api/auth/google/callback
+
+# Spotify Connection (Optional)
+# https://developer.spotify.com/dashboard
+SPOTIFY_CLIENT_SECRET=
+SPOTIFY_CLIENT_SECRET=
+SPOTIFY_CALLBACK_URL=
+
+# AWS Credentials (Optional)
+AWS_ACCESS_KEY_ID=
+AWS_SECRET_ACCESS_KEY=
+AWS_ENDPOINT=
+AWS_S3_BUCKET=
+
+# Image Storage Options
+# STORE_IMAGES_ON_S3 requires AWS Credentials
+STORE_IMAGES_LOCALLY=true
+STORE_IMAGES_ON_S3=false
+
+# Database Options
+# Should be Postgres as that is used for prod and testing, Can be any db though
+DATABASE_TYPE=postgres
+DATABASE_HOST=postgres
+DATABASE_USERNAME=postgres
+DATABASE_PASSWORD=password

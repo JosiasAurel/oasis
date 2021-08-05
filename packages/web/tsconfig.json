@@ -3,14 +3,24 @@
     "baseUrl": ".",
     "paths": {
       "@public/*": ["public/*"],
-      "@components/*": ["src/components/*"],
       "@lib/*": ["src/lib/*"],
-      "@modules/*": ["src/modules"],
-      "@styles/*": ["src/styles"],
-      "@icons/*": ["src/icons/*"]
+      "@parser/*": ["src/parser/*"],
+      "@shared/*": ["src/shared/*"],
+      "@utils/*": ["src/utils/*"],
+      "@entities/*": ["src/entities/*"],
+      "@enums/*": ["src/enums/*"],
+      "@icons/*": ["src/icons/*"],
+      "@components/*": ["src/components/*"],
+      "@providers/*": ["src/providers/*"],
+      "@hooks/*": ["src/hooks/*"],
+      "@locales/*": ["src/locales/*"],
     },
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "es6",
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -22,8 +32,22 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "preserveWatchOutput": true
+    "preserveWatchOutput": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "importHelpers": true,
+    "strictPropertyInitialization": false,
   },
-  "exclude": ["node_modules", ".next", "out"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "**/*.js"]
+  "exclude": [
+    "node_modules",
+    ".next",
+    "out",
+    "cypress"
+  ],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.js"
+  ]
 }

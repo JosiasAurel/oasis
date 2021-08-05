@@ -1,0 +1,32 @@
+{
+  "name": "@oasis-sh/react-gql",
+  "version": "1.0.0",
+  "description": "Client-Side GraphQL API Hooks for Oasis",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
+  "scripts": {
+    "gen": "graphql-codegen",
+    "build": "graphql-codegen && tsc",
+    "watch:gen": "graphql-codegen -w",
+    "watch:tsc": "tsc --watch",
+    "dev": "run-p \"watch:gen\" \"watch:tsc\"",
+    "clean": "rimraf dist/*"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.21.5",
+    "@graphql-codegen/typescript": "^1.22.4",
+    "@graphql-codegen/typescript-document-nodes": "^1.17.14",
+    "@graphql-codegen/typescript-operations": "^1.18.2",
+    "@graphql-codegen/typescript-react-apollo": "^2.2.7",
+    "@types/rimraf": "^3.0.0",
+    "graphql-tag": "^2.12.5",
+    "npm-run-all": "^4.1.5",
+    "typescript": "4.3.5"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.3.20",
+    "graphql": "^15.5.1",
+    "rimraf": "^3.0.2"
+  }
+}

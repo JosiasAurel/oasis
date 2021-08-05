@@ -3,72 +3,450 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type Answer {
+  author: User!
+  content: String!
+  createdAt: String!
+  downvoters(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedUserFromAnswer_downvotedAnswersResponse!
+  downvotes: Float!
+  id: ID!
+  isDownvoted: Boolean!
+  isUpvoted: Boolean!
+  lastEdited: String
+  question: Question!
+  upvoters(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedUserFromAnswer_upvotedAnswersResponse!
+  upvotes: Float!
+}
+
+type Badge {
+  createdAt: String!
+  description: String!
+  id: ID!
+  imagePath: String!
+  level: Float!
+  name: String!
+}
+
 type Comment {
   author: User!
   content: String!
-  dislikes: Int!
+  createdAt: String!
+  downvoters(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedUserFromComment_downvotedCommentsResponse!
+  downvotes: Float!
   id: ID!
-  likes: Int!
-  post: Post!
+  isDownvoted: Boolean!
+  isUpvoted: Boolean!
+  lastEdited: String
+  post: Post
+  question: Question
+  upvoters(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedUserFromComment_upvotedCommentsResponse!
+  upvotes: Float!
+}
+
+input CreateBotInput {
+  name: String!
+  username: String!
+}
+
+input CreatePostInput {
+  imageName: String
+  message: String!
+  topics: [String!]!
+}
+
+input CreateQuestionInput {
+  message: String!
+  topics: [String!]!
+}
+
+input CreateResortInput {
+  banner: String!
+  category: String!
+  description: String!
+  logo: String!
+  name: String!
+}
+
+input EditAnswerInput {
+  content: String!
+}
+
+input EditCommentInput {
+  content: String!
+}
+
+input EditPostInput {
+  message: String
+  topics: [String!]
+}
+
+input EditQuestionInput {
+  message: String
+  topics: [String!]
+}
+
+input MakeBadgeInput {
+  description: String!
+  imagePath: String!
+  level: Float!
+  name: String!
+}
+
+input MakeReportInput {
+  information: String
+  type: ReportType!
 }
 
 type Mutation {
-  createPost(data: NewPostInput!): Boolean!
+  banUser(UserId: String!, endDate: String!): Boolean!
+  createAnswer(data: NewAnswerInput!, questionId: String!): Boolean!
+  createBot(data: CreateBotInput!): String!
+  createComment(data: NewCommentInput!, postId: String!): Boolean!
+  createPost(data: CreatePostInput!): Boolean!
+  createQuestion(data: CreateQuestionInput!): Boolean!
+  createResort(data: CreateResortInput!): Boolean!
+  createTokens: TokenData!
+  deleteAccount: Boolean!
+  deletePost(postId: String!): Boolean!
+  deleteQuestion(questionId: String!): Boolean!
+  downvoteAnswer(answerId: String!): Boolean!
+  downvoteComment(commentId: String!): Boolean!
+  downvotePost(postId: String!): Boolean!
+  editAnswer(answerId: String!, data: EditAnswerInput!): Boolean!
+  editComment(commentId: String!, data: EditCommentInput!): Boolean!
+  editPost(data: EditPostInput!, postId: String!): Boolean!
+  editQuestion(data: EditQuestionInput!, questionId: String!): Boolean!
+  followUser(userId: String!): Boolean!
+  getTokenData(tokenId: String!): PremiumToken!
+  giveBadge(badgeName: String!, username: String!): Boolean!
+  joinResort(resortId: String!): Boolean
+  makeAdmin(roles: [Role!]!, user: String!): Boolean!
+  makeBadge(data: MakeBadgeInput!): Boolean!
+  makePremiumToken(time: Float!): String!
+  makeReport(data: MakeReportInput!, reporteeData: ReportedEntityInput!): Boolean!
+  markAsResolved(reportId: String!, resolved: Boolean!): Boolean!
+  markNotificationAsRead(notificationId: String!): Boolean!
+  redeemPremium(tokenId: String!): Boolean!
+  refreshBotToken(botId: String!): String!
+  refreshToken(refreshToken: String!): String!
   updateProfile(data: UpdateProfileInput!): Boolean!
+  upvoteAnswer(answerId: String!): Boolean!
+  upvoteComment(commentId: String!): Boolean!
+  upvoteDownvote(downvote: Boolean!, postId: String!, upvote: Boolean!): Boolean!
+  upvoteDownvoteAnswer(answerId: String!, downvote: Boolean!, upvote: Boolean!): Boolean!
+  upvoteDownvoteComment(commentId: String!, downvote: Boolean!, upvote: Boolean!): Boolean!
+  upvotePost(postId: String!): Boolean!
 }
 
-input NewPostInput {
-  message: String!
-  title: String!
-  topics: [String!]!
+input NewAnswerInput {
+  content: String!
+}
+
+input NewCommentInput {
+  content: String!
+}
+
+type Notification {
+  createdAt: String!
+  id: ID!
+  performer: User!
+  read: Boolean!
+  type: NotificationType!
+  user: User!
+}
+
+enum NotificationType {
+  Comment
+  Follow
+  ReplyComment
+  UpvoteComment
+  UpvotePost
+}
+
+type PaginatedAnswerFromQuestion_authorResponse {
+  hasMore: Boolean!
+  items: [Answer!]!
+  total: Float!
+}
+
+type PaginatedAnswerFromQuestion_questionResponse {
+  hasMore: Boolean!
+  items: [Answer!]!
+  total: Float!
+}
+
+type PaginatedAnswerFromUser_authorResponse {
+  hasMore: Boolean!
+  items: [Answer!]!
+  total: Float!
+}
+
+type PaginatedAnswerFromUser_downvotersResponse {
+  hasMore: Boolean!
+  items: [Answer!]!
+  total: Float!
+}
+
+type PaginatedAnswerFromUser_upvotersResponse {
+  hasMore: Boolean!
+  items: [Answer!]!
+  total: Float!
+}
+
+type PaginatedCommentFromPost_postResponse {
+  hasMore: Boolean!
+  items: [Comment!]!
+  total: Float!
+}
+
+type PaginatedCommentFromQuestion_questionResponse {
+  hasMore: Boolean!
+  items: [Comment!]!
+  total: Float!
+}
+
+type PaginatedCommentFromUser_authorResponse {
+  hasMore: Boolean!
+  items: [Comment!]!
+  total: Float!
+}
+
+type PaginatedCommentFromUser_downvotersResponse {
+  hasMore: Boolean!
+  items: [Comment!]!
+  total: Float!
+}
+
+type PaginatedCommentFromUser_upvotersResponse {
+  hasMore: Boolean!
+  items: [Comment!]!
+  total: Float!
+}
+
+type PaginatedPostFromResort_resortResponse {
+  hasMore: Boolean!
+  items: [Post!]!
+  total: Float!
+}
+
+type PaginatedPostFromUser_authorResponse {
+  hasMore: Boolean!
+  items: [Post!]!
+  total: Float!
+}
+
+type PaginatedPostFromUser_downvotersResponse {
+  hasMore: Boolean!
+  items: [Post!]!
+  total: Float!
+}
+
+type PaginatedPostFromUser_upvotersResponse {
+  hasMore: Boolean!
+  items: [Post!]!
+  total: Float!
+}
+
+type PaginatedQuestionFromUser_downvotersResponse {
+  hasMore: Boolean!
+  items: [Question!]!
+  total: Float!
+}
+
+type PaginatedQuestionFromUser_upvotersResponse {
+  hasMore: Boolean!
+  items: [Question!]!
+  total: Float!
+}
+
+type PaginatedUserFromAnswer_downvotedAnswersResponse {
+  hasMore: Boolean!
+  items: [User!]!
+  total: Float!
+}
+
+type PaginatedUserFromAnswer_upvotedAnswersResponse {
+  hasMore: Boolean!
+  items: [User!]!
+  total: Float!
+}
+
+type PaginatedUserFromComment_downvotedCommentsResponse {
+  hasMore: Boolean!
+  items: [User!]!
+  total: Float!
+}
+
+type PaginatedUserFromComment_upvotedCommentsResponse {
+  hasMore: Boolean!
+  items: [User!]!
+  total: Float!
+}
+
+type PaginatedUserFromPost_downvotedPostsResponse {
+  hasMore: Boolean!
+  items: [User!]!
+  total: Float!
+}
+
+type PaginatedUserFromPost_upvotedPostsResponse {
+  hasMore: Boolean!
+  items: [User!]!
+  total: Float!
+}
+
+type PaginatedUserFromQuestion_downvotedQuestionsResponse {
+  hasMore: Boolean!
+  items: [User!]!
+  total: Float!
+}
+
+type PaginatedUserFromQuestion_upvotedQuestionsResponse {
+  hasMore: Boolean!
+  items: [User!]!
+  total: Float!
+}
+
+type PaginatedUserFromResort_joinedResortsResponse {
+  hasMore: Boolean!
+  items: [User!]!
+  total: Float!
+}
+
+type PaginatedUserFromUser_botOwnerResponse {
+  hasMore: Boolean!
+  items: [User!]!
+  total: Float!
+}
+
+type PaginatedUserFromUser_followersResponse {
+  hasMore: Boolean!
+  items: [User!]!
+  total: Float!
+}
+
+type PaginatedUserFromUser_followingResponse {
+  hasMore: Boolean!
+  items: [User!]!
+  total: Float!
 }
 
 type Post {
   author: User!
-  comments: [Comment!]!
-  dislikes: Int!
+  comments(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedCommentFromPost_postResponse!
+  createdAt: String!
+  downvoters(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedUserFromPost_downvotedPostsResponse!
+  downvotes: Float!
   id: ID!
-  likes: Int!
+  imageName: String
+  isDownvoted: Boolean!
+  isUpvoted: Boolean!
+  lastEdited: String
   message: String!
-  title: String!
+  resort: Resort
   topics: [String!]!
+  upvoters(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedUserFromPost_upvotedPostsResponse!
+  upvotes: Float!
+}
+
+type PremiumToken {
+  id: ID!
+  premiumTime: Float!
 }
 
 type Query {
-  allComments: [Comment!]!
-  allPosts: [Post!]!
-  allRepos: [Repo!]!
-  allUsers: [User!]!
   currentUser: User
+  feedSortPosts(limit: Float!, offset: Float!): [Post!]!
+  getAnswer(id: String!): Answer!
   getAvailableUsername(username: String!): String!
+  getBadge(id: String!): Badge!
   getComment(id: String!): Comment!
+  getNotifications: [Notification!]
   getPost(id: String!): Post!
-  getRepo(id: String!): Repo!
+  getQuestion(id: String!): Question!
+  getQueue: [Report!]!
+  getResort(id: String!): Resort!
+  getResortByName(name: String!): Resort
   getUser(id: String!): User!
   getUserByName(username: String!): User
-  paginateComments(limit: Float!, offset: Float!): [Comment!]!
-  paginatePosts(limit: Float!, offset: Float!): [Post!]!
-  paginateRepos(limit: Float!, offset: Float!): [Repo!]!
-  paginateUsers(limit: Float!, offset: Float!): [User!]!
+  paginateAnswers(limit: Float!, offset: Float!, sortCol: String, sortType: String): [Answer!]!
+  paginateBadges(limit: Float!, offset: Float!, sortCol: String, sortType: String): [Badge!]!
+  paginateComments(limit: Float!, offset: Float!, sortCol: String, sortType: String): [Comment!]!
+  paginatePosts(limit: Float!, offset: Float!, sortCol: String, sortType: String): [Post!]!
+  paginateQuestions(limit: Float!, offset: Float!, sortCol: String, sortType: String): [Question!]!
+  paginateResorts(limit: Float!, offset: Float!, sortCol: String, sortType: String): [Resort!]!
+  paginateUsers(limit: Float!, offset: Float!, sortCol: String, sortType: String): [User!]!
+  search(limit: Float!, searchQuery: String!): [SearchResult!]!
 }
 
-type Repo {
-  active: Boolean!
-
-  """
-  Time when the repo was added (the number of milliseconds passed since Unix epoch 1970-01-01T00:00:00Z)
-  """
-  date_added: String!
-  desc: String!
-  full_name: String!
-  github_owner: String!
+type Question {
+  answers(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedAnswerFromQuestion_questionResponse!
+  author: User!
+  comments(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedCommentFromQuestion_questionResponse!
+  createdAt: String!
+  downvoters(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedUserFromQuestion_downvotedQuestionsResponse!
   id: ID!
-  issues: Float!
-  language: String!
+  isDownvoted: Boolean!
+  isUpvoted: Boolean!
+  lastEdited: String
+  message: String!
+  questions(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedAnswerFromQuestion_authorResponse!
+  resort: Resort
+  topics: [String!]!
+  upvoters(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedUserFromQuestion_upvotedQuestionsResponse!
+}
+
+type Report {
+  answer: Answer
+  comment: Comment
+  createdAt: String!
+  id: ID!
+  information: String
+  post: Post
+  question: Question
+  reporter: User!
+  resolved: Boolean!
+  resort: Resort
+  type: ReportType!
+  user: User
+}
+
+enum ReportType {
+  InappropriateContent
+}
+
+input ReportedEntityInput {
+  commentId: String
+  postId: String
+  resortId: String
+  userId: String
+}
+
+type Resort {
+  banner: String!
+  category: String!
+  createdAt: String!
+  description: String!
+  id: String!
+  isJoined: Boolean!
+  logo: String!
+  members(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedUserFromResort_joinedResortsResponse!
   name: String!
   owner: User!
-  stars: Float!
-  url: String!
+  posts(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedPostFromResort_resortResponse!
+}
+
+enum Role {
+  Admin
+  Moderator
+  SuperAdmin
+}
+
+union SearchResult = Post | Resort | User
+
+type TokenData {
+  accessToken: String!
+  refreshToken: String!
 }
 
 input UpdateProfileInput {
@@ -80,17 +458,37 @@ input UpdateProfileInput {
 }
 
 type User {
+  answers(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedAnswerFromUser_authorResponse!
   avatar: String!
-  badges: [String!]!
+  badges: [Badge!]
+  banExiration: String
   banner: String
   bio: String
+  botOwner: User
+  bots(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedUserFromUser_botOwnerResponse!
+  comments(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedCommentFromUser_authorResponse!
   createdAt: String!
+  discord: String
+  downvotedAnswers(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedAnswerFromUser_downvotersResponse!
+  downvotedComments(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedCommentFromUser_downvotersResponse!
+  downvotedPosts(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedPostFromUser_downvotersResponse!
+  downvotedQuestions(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedQuestionFromUser_downvotersResponse!
+  followers(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedUserFromUser_followingResponse!
+  following(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedUserFromUser_followersResponse!
   github: String
+  google: String
   id: ID!
+  isBot: Boolean
   name: String
-  posts: [Post!]
-  repos: [Repo!]
+  ownedResorts: [Resort!]
+  posts(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedPostFromUser_authorResponse!
+  premiumExiration: String
+  roles: [Role!]!
   twitter: String
+  upvotedAnswers(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedAnswerFromUser_upvotersResponse!
+  upvotedComments(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedCommentFromUser_upvotersResponse!
+  upvotedPosts(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedPostFromUser_upvotersResponse!
+  upvotedQuestions(limit: Float!, offset: Float!, sortCol: String, sortType: String): PaginatedQuestionFromUser_upvotersResponse!
   url: String
   username: String
   verified: Boolean!

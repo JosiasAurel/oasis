@@ -1,0 +1,7 @@
+mutation UpvoteDownvoteComment(
+  $upvote: Boolean!
+  $downvote: Boolean!
+  $commentId: String!
+) {
+  upvoteDownvoteComment(upvote: $upvote, downvote: $downvote, commentId: $commentId)
+}

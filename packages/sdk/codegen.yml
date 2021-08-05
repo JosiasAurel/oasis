@@ -1,0 +1,7 @@
+schema: ../api/schema.gql
+generates:
+  src/generated/types.ts:
+    plugins:
+      - typescript
+    config:
+      constEnums: true

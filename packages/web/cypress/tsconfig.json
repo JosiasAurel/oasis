@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "target": "es6",
+    "jsx": "preserve",
+    "moduleResolution": "node",
+    "strict": true,
+    "lib": ["ESNext", "DOM"],
+    "types": ["cypress"],
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "preserveSymlinks": true,
+    "typeRoots": ["./node_modules/@types"],
+    "downlevelIteration": true,
+    "allowJs": true,
+  },
+  "include": ["./**/*.ts"]
+}

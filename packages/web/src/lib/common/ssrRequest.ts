@@ -1,28 +1,32 @@
-import { getSchema } from '@oasis/api/dist/utils/getSchema';
 import { NormalizedCacheObject } from '@apollo/client';
-import { initializeApollo } from './apolloClient';
+import { initializeApollo } from '../apollo';
 import { graphql, DocumentNode, print } from 'graphql';
-
-// Creates a GraphQL request for SSR or SSG.
-// Instead of sending a request to the api
-// endpoint, this uses the schema from
-// TypeGraphQL and queries that. This method
-// increases performance
+import { IncomingMessage } from 'http';
+import forceRequire from '@utils/require';
 
 type Query = {
   document: DocumentNode;
   variables?: { [key: string]: any };
-  context?: any;
 };
 
 export const ssrRequest = async (
-  ...queries: Query[]
-): Promise<NormalizedCacheObject> => {
-  const schema = await getSchema();
-  const apolloClient = initializeApollo();
+  req: IncomingMessage,
+  queries: Query[]
+): Promise<NormalizedCacheObject | void> => {
+  if (process.env.API_MODE === 'remote') return {};
 
-  // For every document, follow the steps below
-  for (const { document, variables = {}, context } of queries) {
+  const { createSchema } = forceRequire(
+    '@oasis-sh/api/dist/utils/files/createSchema'
+  );
+  const { createContext } = forceRequire(
+    '@oasis-sh/api/dist/utils/auth/createContext'
+  );
+  const schema = await createSchema();
+  const apolloClient = initializeApollo();
+  const contextValue = await createContext(req);
+
+  // For every document, do the following
+  for (const { document, variables = {} } of queries) {
     // Add a "__typename" field because Apollo's cache expects it
     // @todo Change how this is done (editing JSON directly may cause problems in the future)
     const DocumentForGql: DocumentNode = JSON.parse(
@@ -37,7 +41,7 @@ export const ssrRequest = async (
       schema,
       source: print(DocumentForGql),
       variableValues: variables,
-      contextValue: context,
+      contextValue,
     });
 
     // Write the query to the cache

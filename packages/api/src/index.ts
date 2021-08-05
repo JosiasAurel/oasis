@@ -1,69 +1,95 @@
-import "reflect-metadata";
-import { config } from "dotenv";
+import 'reflect-metadata';
+import { config } from 'dotenv';
+import express from 'express';
+import { createApolloServer } from '@root/server';
+import authRouter from '@auth/oauth';
+import connectionRouter from '@auth/connections';
+import apiRouter from './routes';
+import expressSession from 'express-session';
+import { redisStore, redisClient } from '@config/redis';
+import passport from 'passport';
+import { sessionSecret, isProduction, PORT } from '@lib/constants';
+import * as log from '@utils/output/log';
+import { checkNodeMajor } from '@lib/nodeMajor';
+import { getDatabase } from '@config/database';
+import fileUpload from 'express-fileupload';
+import { joinRoot } from '@utils/common/rootPath';
+
 config();
 
-import express from "express";
-import { createConnection } from "typeorm";
-import { createApolloServer } from "./apolloServer";
-import authRouter from "./modules/auth";
-import expressSession from "express-session";
-import { createClient } from "redis";
-import connectRedis from "connect-redis";
-import { ormconfig } from "./ormconfig";
-import passport from "passport";
+// function to start server
+export const initializeServer = async () => {
+  try {
+    await getDatabase();
+    checkNodeMajor(15);
 
-const RedisStore = connectRedis(expressSession);
+    const app = express();
+    app.disable('x-powered-by');
 
-const redisClient = createClient(process.env.OASIS_API_REDIS_URL);
+    if (process.env.TRUST_PROXY === 'true') {
+      app.set('trust proxy', 1);
+    }
 
-export const createApp = async () => {
-  const app = express();
-  app.disable('x-powered-by');
+    const apolloServer = await createApolloServer();
 
-  if (process.env.OASIS_API_TRUST_PROXY === "true") {
-    app.set('trust proxy', 1);
+    // Express-Session configuration
+    app.use(
+      expressSession({
+        store: new redisStore({
+          client: redisClient,
+        }),
+        secret: sessionSecret,
+        resave: false,
+        saveUninitialized: true,
+        cookie: {
+          secure: isProduction,
+          maxAge: null,
+          signed: true,
+          sameSite: 'lax',
+        },
+      })
+    );
+
+    // Passport configuration
+    app.use(passport.initialize());
+    app.use(passport.session());
+    passport.serializeUser((user, done) => done(null, user));
+    passport.deserializeUser((user, done) => done(null, user));
+
+    // File Upload Config
+    app.use(fileUpload());
+    if (process.env.STORE_IMAGES_LOCALLY === 'true') {
+      app.use('/images', express.static(joinRoot('..', 'images')));
+      log.warn(
+        'You are storing images locally. Only allow trusted users access to the api as this can be unsafe.'
+      );
+    }
+
+    // Authentication API
+    app.use('/api/auth', authRouter(passport));
+
+    // Connection API
+    app.use('/api/connection', connectionRouter());
+
+    // Routes
+    app.use('/api', apiRouter());
+
+    // Apollo GraphQL Server
+    apolloServer.applyMiddleware({ app });
+
+    log.event('api started successfully');
+    return app;
+  } catch (err) {
+    log.error(err);
   }
-
-  await createConnection(ormconfig);
-  const apolloServer = await createApolloServer();
-
-  /* Express-Session configuration */
-  app.use(
-    expressSession({
-      store: new RedisStore({ client: redisClient }),
-      secret: process.env.OASIS_API_SESSION_SECRET,
-      resave: false,
-      saveUninitialized: true,
-      cookie: {
-        domain: process.env.OASIS_API_PUBLIC_DOMAIN,
-        secure: process.env.NODE_ENV === "production",
-        maxAge: null,
-        signed: true,
-        sameSite: 'lax'
-      },
-    })
-  );
-
-  /* Passport configuration */
-  app.use(passport.initialize());
-  app.use(passport.session());
-  passport.serializeUser((user, done) => done(null, user));
-  passport.deserializeUser((user, done) => done(null, user));
-
-  /* Authentication API */
-  app.use("/api/auth", authRouter(passport));
-
-  /* Apollo GraphQL Server */
-  apolloServer.applyMiddleware({ app });
-
-  return app;
 };
 
 if (require.main === module) {
-  const PORT = process.env.PORT || 4000;
-  createApp().then((app) => {
+  initializeServer().then((app) => {
+    if (!app) process.exit(1);
+
     app.listen(PORT, () =>
-      console.log(`Server started on http://localhost:${PORT}/graphql`)
+      log.ready(`ready on http://localhost:${PORT}/graphql`)
     );
   });
 }

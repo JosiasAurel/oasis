@@ -3,10 +3,7 @@
 
 # next.js
 /.next/
-/out/
-
-# production
-/build
+ormconfig.ts
 
 # debug
 yarn-debug.log*
@@ -19,8 +16,10 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
-# vercel
-.vercel
-
 # sql
 *.sqlite
+
+/server/dist
+
+# cypres
+cypress/screenshots

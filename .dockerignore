@@ -1,0 +1,22 @@
+# yarn v2
+.yarn/*
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+
+node_modules/
+postgres_data/
+.next
+packages/api/db.sqlite
+packages/api/src/ormconfig.ts
+packages/web/db.sqlite
+packages/web/server/index.js
+# macOS
+.DS_Store
+
+# sql/redis db
+*.sqlite
+*.rdb
+
+**/.env
